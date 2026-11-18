@@ -164,3 +164,4 @@ Be ready to answer these 4 questions when your professor evaluates your submissi
    *Answer:* Render dynamically assigns a port at boot time (e.g. 10000). Our application reads `os.environ.get("PORT")` so it binds to the port assigned by the cloud orchestrator.
 4. **What is the role of `/health`?**  
    *Answer:* It acts as a cloud liveness probe. Render continually pings `/health` to verify that the container is healthy before routing incoming traffic to it.
+# student-information-portal
