@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Information Portal | Cloud Computing Lab</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>">
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <nav class="navbar">
+    <div class="container nav-content">
+      <div class="brand-wrapper">
+        <div class="brand-icon">🎓</div>
+        <div>
+          <h1 class="brand-title">Student Information Portal</h1>
+          <p class="brand-subtitle">Cloud Computing Tool Explorer • PaaS Implementation</p>
+        </div>
+      </div>
+      <div class="nav-actions">
+        <div class="badge-cloud" id="healthStatusBadge">
+          <span class="badge-pulse"></span>
+          <span>Checking Platform...</span>
+        </div>
+        <a href="/docs" target="_blank" class="btn-docs" title="Interactive Swagger API Documentation">
+          <span>⚡ API Docs</span>
+        </a>
+        <a href="/health" target="_blank" class="btn-docs" title="Direct Health Check Endpoint">
+          <span>🩺 /health</span>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero & Statistics Section -->
+  <header class="hero-section">
+    <div class="container">
+      <div class="hero-header">
+        <span class="hero-tag">Platform-as-a-Service (PaaS) Demonstration</span>
+        <h2 class="hero-title">Academic Records & Cloud Diagnostics Dashboard</h2>
+        <p class="hero-desc">
+          Lightweight, cloud-native full-stack service developed using <strong>Python & FastAPI</strong>, 
+          featuring real-time REST endpoints, automated health probes, and continuous deployment via <strong>Render Cloud</strong>.
+        </p>
+      </div>
+
+      <!-- Quick Metrics Grid -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Total Enrolled</div>
+          <div class="stat-value" id="statTotalStudents">--</div>
+          <div class="stat-sub">Registered student profiles</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Average CGPA</div>
+          <div class="stat-value" id="statAvgCgpa">--</div>
+          <div class="stat-sub">Across all departments</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Highest CGPA</div>
+          <div class="stat-value" id="statHighestCgpa">--</div>
+          <div class="stat-sub">Batch topper score</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Active Status</div>
+          <div class="stat-value" id="statActiveStudents">--</div>
+          <div class="stat-sub">Currently attending</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Avg. Attendance</div>
+          <div class="stat-value" id="statAvgAttendance">--</div>
+          <div class="stat-sub">Campus minimum: 75%</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Area -->
+  <main class="container main-content">
+
+    <!-- Cloud Architecture Notice -->
+    <div class="arch-card">
+      <div class="arch-title">
+        <span>☁️</span>
+        <span>Cloud Computing Architecture: How Render Hosts This Application</span>
+      </div>
+      <p style="font-size: 0.85rem; color: #475569;">
+        Render operates as a modern <strong>Platform-as-a-Service (PaaS)</strong>. It abstracts hardware, virtualization, and OS management away from developers.
+      </p>
+      <div class="arch-steps">
+        <div class="arch-step-item">
+          <div class="arch-step-num">Step 1 • Source</div>
+          <div class="arch-step-name">GitHub Repository</div>
+          <div class="arch-step-desc">Code is pushed to a remote Git branch with requirements.txt.</div>
+        </div>
+        <div class="arch-step-item">
+          <div class="arch-step-num">Step 2 • Webhook</div>
+          <div class="arch-step-name">Render Auto-Deploy</div>
+          <div class="arch-step-desc">Render detects new commit via webhook and spins up isolated build container.</div>
+        </div>
+        <div class="arch-step-item">
+          <div class="arch-step-num">Step 3 • Build</div>
+          <div class="arch-step-name">Dependencies Installed</div>
+          <div class="arch-step-desc"><code>pip install -r requirements.txt</code> prepares the ASGI environment.</div>
+        </div>
+        <div class="arch-step-item">
+          <div class="arch-step-num">Step 4 • Runtime</div>
+          <div class="arch-step-name">Uvicorn on 0.0.0.0:$PORT</div>
+          <div class="arch-step-desc">Render assigns dynamic PORT and binds external TLS/HTTPS reverse proxy.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Student Records Card -->
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <h2 class="card-title">Student Records Roster</h2>
+          <p class="card-subtitle">Search, filter, and inspect student academic information</p>
+        </div>
+      </div>
+
+      <!-- Search & Filter Controls -->
+      <div class="filter-bar">
+        <div class="search-input-wrapper">
+          <span class="search-icon">🔍</span>
+          <input 
+            type="text" 
+            id="searchInput" 
+            class="search-input" 
+            placeholder="Search student by name or roll number..."
+            autocomplete="off"
+          >
+        </div>
+
+        <select id="departmentFilter" class="filter-select" title="Filter by Department">
+          <option value="All">All Departments</option>
+          <option value="Computer Science & Engineering">Computer Science & Engg</option>
+          <option value="Information Technology">Information Technology</option>
+          <option value="Artificial Intelligence & Data Science">AI & Data Science</option>
+          <option value="Electronics & Communication">Electronics & Comm</option>
+        </select>
+
+        <select id="statusFilter" class="filter-select" title="Filter by Status">
+          <option value="All">All Statuses</option>
+          <option value="Active">Active</option>
+          <option value="Graduated">Graduated</option>
+          <option value="On-Leave">On-Leave</option>
+        </select>
+
+        <button id="resetFiltersBtn" class="btn-secondary" title="Clear all filters">
+          Reset Filters
+        </button>
+      </div>
+
+      <!-- Students Table -->
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Roll No.</th>
+              <th>Student Details</th>
+              <th>Department</th>
+              <th>Semester</th>
+              <th>CGPA</th>
+              <th>Attendance</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="studentsTableBody">
+            <tr>
+              <td colspan="8" style="text-align: center; padding: 2rem; color: #64748b;">
+                Loading academic records from cloud API...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Interactive Cloud REST API Explorer -->
+    <div class="api-console">
+      <div class="api-console-header">
+        <div class="api-title">
+          <span>⚡</span>
+          <span>Live Cloud REST API Explorer</span>
+        </div>
+        <span style="font-size: 0.75rem; color: #94a3b8;">Click any endpoint below to test live JSON response & roundtrip latency</span>
+      </div>
+
+      <!-- Endpoint Selector Buttons -->
+      <div class="api-buttons">
+        <button class="btn-endpoint" data-endpoint="/health" onclick="testApiEndpoint('/health')">
+          <span class="btn-method">GET</span> /health
+        </button>
+        <button class="btn-endpoint" data-endpoint="/api/stats" onclick="testApiEndpoint('/api/stats')">
+          <span class="btn-method">GET</span> /api/stats
+        </button>
+        <button class="btn-endpoint" data-endpoint="/api/students" onclick="testApiEndpoint('/api/students')">
+          <span class="btn-method">GET</span> /api/students
+        </button>
+        <button class="btn-endpoint" data-endpoint="/api/students/1" onclick="testApiEndpoint('/api/students/1')">
+          <span class="btn-method">GET</span> /api/students/1
+        </button>
+        <button class="btn-endpoint" data-endpoint="/api/cloud-info" onclick="testApiEndpoint('/api/cloud-info')">
+          <span class="btn-method">GET</span> /api/cloud-info
+        </button>
+      </div>
+
+      <!-- Terminal-like Output Console -->
+      <div class="console-output-box">
+        <div class="console-meta-bar">
+          <div>
+            <span>Target: </span>
+            <strong id="consoleUrl" style="color: #f1f5f9;">/health</strong>
+          </div>
+          <div>
+            <span>Status: </span>
+            <strong id="consoleStatus" style="color: #34d399;">HTTP 200 OK</strong>
+            <span style="margin: 0 0.5rem;">•</span>
+            <span>Latency: </span>
+            <strong id="consoleLatency" style="color: #f1f5f9;">-- ms</strong>
+          </div>
+        </div>
+        <pre class="console-code" id="consoleCode">// Response payload will appear here...</pre>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Student Profile Details Modal -->
+  <div class="modal-overlay" id="studentModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div>
+          <h3 class="card-title" id="modalStudentName">Student Profile</h3>
+          <p class="card-subtitle" id="modalStudentRoll">Roll Number</p>
+        </div>
+        <button class="modal-close" id="closeModalBtn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="profile-grid">
+          <div class="profile-field">
+            <label>Email Address</label>
+            <span id="modalStudentEmail">--</span>
+          </div>
+          <div class="profile-field">
+            <label>Department</label>
+            <span id="modalStudentDept">--</span>
+          </div>
+          <div class="profile-field">
+            <label>Semester</label>
+            <span id="modalStudentSem">--</span>
+          </div>
+          <div class="profile-field">
+            <label>Academic Standing</label>
+            <span id="modalStudentCgpa">--</span>
+          </div>
+          <div class="profile-field">
+            <label>Attendance Record</label>
+            <span id="modalStudentAttendance">--</span>
+          </div>
+          <div class="profile-field">
+            <label>Enrollment Status</label>
+            <span id="modalStudentStatus">--</span>
+          </div>
+        </div>
+        <div style="margin-top: 1.25rem;">
+          <label style="font-size: 0.72rem; font-weight: 600; text-transform: uppercase; color: #94a3b8;">
+            Specializations & Technical Skills
+          </label>
+          <div class="skills-tags" id="modalStudentSkills"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p>
+        <strong>Student Information Portal</strong> • Cloud Computing Practical Assignment
+      </p>
+      <p style="margin-top: 0.25rem; font-size: 0.75rem;">
+        Deployed on <strong>Render PaaS</strong> • Built with Python & FastAPI • Evaluated for 10 Marks
+      </p>
+    </div>
+  </footer>
+
+  <script src="/static/js/app.js"></script>
+</body>
+</html>
